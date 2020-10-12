@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <title>Travel_app</title>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<h1>{{ user }}, welcome in your travel planer!</h1>
+    {%  else %}
+    <h1>Welcome in your travel planer!</h1>
+    <br>
+{#    To start yor journey adrventure#}
+{#     <a href='{% url 'myLoginView' %}'><input type="submit" value="login"></a>#}
+    or
+    <a href='{% url 'SignUpView' %}'><input type="submit" value="register"></a>
+
+{% endif %}
+
+{#{% if user.is_authenticated %}#}
+{#    <a href='{% url 'logout' %}'><input type="submit" value="logout"></a>#}
+{#{% endif %}#}
+
+<img src="{% static 'z.jpg' %}" width="300" height="300">
+
+
+{% block content %}
+
+{% endblock %}
+
+
+</body>
+<footer>
+    <h3>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</h3> <br>
+    <br>
+    <h3> Today is {{ date }} </h3><br>
+    App created by Jenny <br>
+</footer>
+</html>
