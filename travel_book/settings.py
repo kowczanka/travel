@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'travel_app',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'travel_book.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'accounts/templates/accounts']
+        'DIRS': [BASE_DIR / 'templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -69,6 +70,7 @@ TEMPLATES = [
         },
     },
 ]
+AUTH_USER_MODEL = 'accounts.Account'
 
 WSGI_APPLICATION = 'travel_book.wsgi.application'
 
@@ -79,7 +81,7 @@ WSGI_APPLICATION = 'travel_book.wsgi.application'
 DATABASES = {
     'default': {
         'HOST': '127.0.0.1',
-        'NAME': 'travel_book',
+        'NAME': 'travel_book_test',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'USER': 'postgres',
         'PASSWORD': 'coderslab',
@@ -124,3 +126,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = 'travel_book/static/'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
+# do formatowania js i css : dodajemy pliki css i js do static
+# STATICFILES_DIRS = [
+#     BASE_DIR / "travel_book/static/"
+# ]

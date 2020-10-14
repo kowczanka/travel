@@ -15,13 +15,33 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from travel_app.views import index, CityCreateView, CityView, UpdateCityView, DeleteCityView, DeleteBlogView, \
+    DeleteTravelView
+from travel_app.views import  BlogCreateView, BlogView, UpdateBlogView, \
+    UpdateTravelView, TravelView, TravelCreateView
 
-from accounts.views import SignUpView
-from travel_app.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index),
-    path('signUp/', SignUpView.as_view(), name='SignUpView'),
+    path('', index, name = "home"),
+    path('accounts/', include('accounts.urls')),
+
+    path('CityCreateView/', CityCreateView.as_view(), name='CityCreateView'),
+    path('CityView/', CityView.as_view(), name='CityView'),
+    path('UpdateCityView/<int:id>/', UpdateCityView.as_view(), name='UpdateCityView'),
+    path('DeleteCityView/<int:pk>/', DeleteCityView.as_view(), name='DeleteCityView'),
+
+
+
+    path('BlogCreateView/', BlogCreateView.as_view(), name='BlogCreateView'),
+    path('BlogView/', BlogView.as_view(), name='BlogView'),
+    path('UpdateBlogView/<int:id>/', UpdateBlogView.as_view(), name='UpdateBlogView'),
+    path('DeleteBlogView/<int:pk>/', DeleteBlogView.as_view(), name='DeleteBlogView'),
+
+    path('TravelCreateView/', TravelCreateView.as_view(), name='TravelCreateView'),
+    path('TravelView/', TravelView.as_view(), name='TravelView'),
+    path('UpdateTravelView/<int:id>/', UpdateTravelView.as_view(), name='UpdateTravelView'),
+    path('DeleteTravelView/<int:pk>/', DeleteTravelView.as_view(), name='DeleteTravelView'),
+
 
 ]

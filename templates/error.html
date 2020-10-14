@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    You have no travels yet! <br>
+    <br>
+    <a href="{% url "TravelCreateView" %} "><input type="submit" value="Add travel"></a><br>
+    <a href='{% url 'home' %}'><input type="submit" value="Home"></a>
+
+{% endblock %}
+
+

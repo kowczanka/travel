@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+    <ul>
+        {% for obj in objects %}
+            <li><a href="{{ obj.get_detail_url }}" >{{ obj }}</a><br>
+                <a href="{{ obj.del_url }}"> <input type="submit" value="Delete"> </a>
+            </li>
+
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+
