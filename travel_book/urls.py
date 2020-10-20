@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from travel_app.views import index, CityCreateView, CityView, UpdateCityView, DeleteCityView, DeleteBlogView, \
-    DeleteTravelView
-from travel_app.views import  BlogCreateView, BlogView, UpdateBlogView, \
+    DeleteTravelView, UpdatePlanView, DeletePlanView, PlanCreateView, PlanView, SeeBlog, JournalCreateView, JournalView, \
+    UpdateJournalView, DeleteJournalView
+from travel_app.views import BlogCreateView, BlogView, UpdateBlogView, \
     UpdateTravelView, TravelView, TravelCreateView
 
 
@@ -31,17 +32,24 @@ urlpatterns = [
     path('UpdateCityView/<int:id>/', UpdateCityView.as_view(), name='UpdateCityView'),
     path('DeleteCityView/<int:pk>/', DeleteCityView.as_view(), name='DeleteCityView'),
 
-
-
     path('BlogCreateView/', BlogCreateView.as_view(), name='BlogCreateView'),
     path('BlogView/', BlogView.as_view(), name='BlogView'),
     path('UpdateBlogView/<int:id>/', UpdateBlogView.as_view(), name='UpdateBlogView'),
     path('DeleteBlogView/<int:pk>/', DeleteBlogView.as_view(), name='DeleteBlogView'),
+    path('SeeBlog/<int:id>', SeeBlog, name='SeeBlog'),
 
     path('TravelCreateView/', TravelCreateView.as_view(), name='TravelCreateView'),
     path('TravelView/', TravelView.as_view(), name='TravelView'),
     path('UpdateTravelView/<int:id>/', UpdateTravelView.as_view(), name='UpdateTravelView'),
     path('DeleteTravelView/<int:pk>/', DeleteTravelView.as_view(), name='DeleteTravelView'),
 
+    path('PlanCreateView/', PlanCreateView.as_view(), name='PlanCreateView'),
+    path('PlanView/', PlanView.as_view(), name='PlanView'),
+    path('UpdatePlanView/<int:id>/', UpdatePlanView.as_view(), name='UpdatePlanView'),
+    path('DeletePlanView/<int:pk>/', DeletePlanView.as_view(), name='DeletePlanView'),
 
+    path('JournalCreateView/', JournalCreateView.as_view(), name='JournalCreateView'),
+    path('JournalView/', JournalView.as_view(), name='JournalView'),
+    path('UpdateJournalView/<int:id>/', UpdateJournalView.as_view(), name='UpdateJournalView'),
+    path('DeleteJournalView/<int:pk>/', DeleteJournalView.as_view(), name='DeleteJournalView'),
 ]

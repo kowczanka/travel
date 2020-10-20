@@ -1,0 +1,11 @@
+{% extends 'blog.html' %}
+
+{% block post %}
+
+    <h3> Post title: {{post.post_title}} written by {{ post.author }} </h3>
+
+    {{self.post_image}}
+    Text:  {{post.text }}
+    <h5> published on: {{ post.date_of_creation }} </h5>
+
+{%  endblock %}

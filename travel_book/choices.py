@@ -1,8 +1,6 @@
 from django.utils.translation import ugettext as _
 
 
-
-
 COUNTRIES = (
     ('AA', _('undefined country')),
     ('AD', _('Andorra')),

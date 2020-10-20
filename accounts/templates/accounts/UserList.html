@@ -1,0 +1,17 @@
+{%  extends 'accounts/baseSuperuser.html' %}
+
+{% block Superusercontent %}
+    {%  for obj in objects %}
+
+<li>
+
+        <a href=" {% url 'user_details' obj.id %}"> {{ obj.username }}</a>
+        <a href=" {% url 'delete_user' obj.id %}"><input type="submit" value="Delete user"></a>
+
+</li>
+        {%  empty %}
+
+        Lista jest pusta
+
+    {%  endfor %}
+{% endblock %}

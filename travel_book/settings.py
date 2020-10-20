@@ -70,7 +70,7 @@ TEMPLATES = [
         },
     },
 ]
-AUTH_USER_MODEL = 'accounts.Account'
+#AUTH_USER_MODEL = 'accounts.Account'
 
 WSGI_APPLICATION = 'travel_book.wsgi.application'
 
@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'travel_book.wsgi.application'
 DATABASES = {
     'default': {
         'HOST': '127.0.0.1',
-        'NAME': 'travel_book_test',
+        'NAME': 'travel_book_test_2',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'USER': 'postgres',
         'PASSWORD': 'coderslab',

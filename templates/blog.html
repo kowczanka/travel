@@ -9,25 +9,40 @@
 </head>
 <body>
 
-{% if user.is_authenticated %}
-    <h1>{{ user }}, you can add new posts <a href=" {% url "BlogCreateView" %} ">here:</a></h1><br>
+    {% if user.is_authenticated %}
+        <h1>{{ user }}, you can add new post <a href=" {% url "BlogCreateView" %} "> >here< </a></h1><br>
 
-{% else %}
-    <h1> To add new posts <a href='{% url 'myLoginView' %}'><input type="submit" value="login"></a>
-        or
-        <a href='{% url 'SignUpView' %}'><input type="submit" value="register"></a></h1><br>
-    <ul>
+    {% else %}
+
+            To add new post
+                <a href='{% url 'myLoginView' %}'><input type="submit" value="login"></a>
+                or
+                <a href='{% url 'SignUpView' %}'><input type="submit" value="register"></a><br>
 
     {% endif %}
 
-        {% for post in objects %}
 
-            <li><a href="{{ post.get_detail_url }}">{{ post }}</a>
-                                <a href="{{ obj.delete_url }}"> <input type="submit" value="Delete"> </a>
+    <ul>
+        {% for obj in objects %}
+
+
+            <li>
+            <a href="{{ obj.get_SeeBlog_url }}"> {{ obj }} </a>
+{#                <a href="{{ obj.get_detail_url }}"> <input type="submit" value="Update"> </a>#}
+                {% if user.is_authenticated %}
+                <a href="{{ obj.del_url }}"> <input type="submit" value="Delete"> </a>
+
+
+                 {% endif %}
             </li>
 
         {% endfor %}
 
+    </ul>
+
+{% block post %}
+
+{% endblock %}
 
 
 </body>
@@ -36,7 +51,7 @@
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</h3>
     <br><a href='{% url 'home' %}'><input type="submit" value="Home"></a>
     {% if user.is_authenticated %}
-    <a href='{% url 'logout' %}'><input type="submit" value="logout"></a>
+    <a href='{% url 'logout' %}'><input type="submit" value="Logout"></a>
     {%  endif %}
     <br>
     <h3> Today is {{ date }} </h3><br>
