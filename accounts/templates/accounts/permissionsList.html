@@ -1,15 +1,19 @@
 {%  extends 'accounts/baseSuperuser.html' %}
 
 {% block Superusercontent %}
+
     {%  for obj in objects %}
+
 <li>
     <a href=" {% url 'ChangePermissionView' obj.pk %}"> {{ obj.username }}</a>
     <a href=" {% url 'ChangePermissionViewGroup' obj.pk %}"> {{ obj.name }}</a>
 
 </li>
-        {%  empty %}
+
+    {%  empty %}
 
         Lista jest pusta
 
     {%  endfor %}
+
 {% endblock %}

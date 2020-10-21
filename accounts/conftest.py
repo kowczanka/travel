@@ -13,6 +13,7 @@ def group():
     group = Group.objects.create(name='travelers')
     return group
 
+
 @pytest.fixture
 def users(group):
     account_1 = User.objects.create(

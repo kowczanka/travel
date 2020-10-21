@@ -3,6 +3,7 @@
 {% block Superusercontent %}
 
     <li>
+
         First name: {{ objects.first_name }}<br>
         Last name: {{ objects.last_name }}<br>
 
@@ -10,8 +11,8 @@
         email: {{ objects.email }}<br>
 
         {% for group in objects.groups.all %}
-        groups: {{ group.name }}<br>
-    {% endfor %}
+            groups: {{ group.name }}<br>
+        {% endfor %}
 
     </li>
 

@@ -1,21 +1,6 @@
 import pytest
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-
-from accounts.views import SignUpView
-
-
-@pytest.mark.django_db
-def test_SignUpView(client, users):
-    context = {
-        "username": "jannowak",
-        "email": "jannowak@op.pl"
-    }
-    #password
-
-    client.post(reverse("SignUpView"), context)
-    assert User.objects.get(username = "jannowak")
 
 
 @pytest.mark.django_db
@@ -32,7 +17,6 @@ def test_UserView_not_superuser(client, users, group):
     client.force_login(user=users[0])
     response = client.get(reverse('UserView'))
     assert response.status_code == 403
-
 
 @pytest.mark.django_db
 def test_GroupView(client, group, users):
@@ -54,6 +38,7 @@ def test_ChangePermissionView(client, group, users):
     client.force_login(user=users[1])
     response = client.get(reverse("ChangePermissionView", args= (users[0].id,)) )
     assert response.status_code == 200
+
 
 @pytest.mark.django_db
 def test_ChangePermissionView_not_superuser(client, group, users):
@@ -91,18 +76,17 @@ def test_UserList_not_superuser(client, users):
     response = client.get(reverse('UserList'))
     assert response.status_code == 403
 
-
 @pytest.mark.django_db
 def test_delete_user_view(client, users):
     client.force_login(user=users[1])
     response = client.get(reverse('delete_user', args=(users[0].pk,)))
     assert response.status_code == 200
 
-# @pytest.mark.django_db
-# def test_delete_user_view_not_superuser(client, users):
-#     client.force_login(user=users[0])
-#     response = client.get(reverse('delete_user', args=(users[0].pk,)))
-#     assert response.status_code == 403
+@pytest.mark.django_db
+def test_delete_user_view_not_superuser(client, users):
+    client.force_login(user=users[0])
+    response = client.get(reverse('delete_user', args=(users[0].pk,)))
+    assert response.status_code == 403
 
 @pytest.mark.django_db
 def test_user_details_view(client, users):
@@ -111,11 +95,11 @@ def test_user_details_view(client, users):
     assert response.status_code == 200
     assert response.context['objects'].username == users[0].username
 
-# @pytest.mark.django_db
-# def test_user_details_view_not_superuser(client, users):
-#     client.force_login(user=users[0])
-#     response = client.get(reverse('user_details', args=(users[0].pk,)))
-#     assert response.status_code == 403
+@pytest.mark.django_db
+def test_user_details_view_not_superuser(client, users):
+    client.force_login(user=users[0])
+    response = client.get(reverse('user_details', args=(users[0].pk,)))
+    assert response.status_code == 403
 
 
 

@@ -1,8 +1,4 @@
 from django import forms
-
-# from accounts.models import Account
-from django.contrib.auth.models import User
-
 from travel_app.models import City, Blog, Travel, Plan, Travel_Journal
 
 
@@ -12,6 +8,7 @@ class CityModelForm(forms.ModelForm):
         model = City
         exclude = ("author",)
         fields = "__all__"
+
 
 class BlogModelForm(forms.ModelForm):
 
@@ -54,6 +51,7 @@ class TravelModelForm(forms.ModelForm):
                                         attrs={'firstDay': 1, 'format': 'yyyy-mm-dd', 'type': 'date'})
         }
 
+
 class JournalModelForm(forms.ModelForm):
 
     def __init__(self, *args,logged_user=None, **kwargs):
@@ -64,3 +62,4 @@ class JournalModelForm(forms.ModelForm):
         model = Travel_Journal
         exclude = ("author",)
         fields = "__all__"
+
