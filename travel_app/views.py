@@ -17,8 +17,9 @@ def index(request):
         return render(request, 'accounts/baseSuperuser.html')
     return render(request, 'base.html')
 
+# CITY  ###################################################################################
 
-class CityCreateView(View):
+class CityCreateView(LoginRequiredMixin, View):
     def get(self, request):
         form = CityModelForm()
         return render(request, 'form.html', {'form': form, 'button_name': 'Add city'})
@@ -26,19 +27,21 @@ class CityCreateView(View):
     def post(self, request):
         form = CityModelForm(request.POST)
         if form.is_valid():
-            form.save()
+            city = form.save(commit=False)
+            city.author = request.user
+            city.save()
             return redirect(reverse_lazy('CityView'))
 
 
-class CityView(View):
+class CityView(LoginRequiredMixin, View):
     def get(self, request):
-        cities = City.objects.all()
+        cities = City.objects.filter(author=request.user)
         if cities.count() == 0:
-            return render(request, 'error.html', {'error_notice': 'You have nothing to display yet!'})
+            return render(request, 'error.html', {'error_notice': 'You have nothing to display yet!', 'objects':cities})
         return render(request, 'ListView.html', {'objects': cities})
 
 
-class UpdateCityView(View):
+class UpdateCityView(LoginRequiredMixin, View):
     def get(self, request, id=None):
         if id is None:
             form = CityModelForm()
@@ -58,7 +61,7 @@ class UpdateCityView(View):
             return redirect(reverse_lazy('CityView'))
 
 
-class DeleteCityView(DeleteView):
+class DeleteCityView(LoginRequiredMixin, DeleteView):
     model = City
     fields = '__all__'
     template_name = 'delete.html'
@@ -77,7 +80,7 @@ class DeleteCityView(DeleteView):
         return self.delete(request, *args, **kwargs)
 
 
-#####################################################################################################################
+#   BLOG    ####################################################################################################################
 
 class BlogCreateView(LoginRequiredMixin, View):
     def get(self, request):
@@ -87,7 +90,7 @@ class BlogCreateView(LoginRequiredMixin, View):
     def post(self, request):
         form = BlogModelForm(request.POST)
         if form.is_valid():
-            blog = form.save(commit=False)  # nie zapisze bloga do bazy danych, tylko stworzy obiekt Blog
+            blog = form.save(commit=False)
             blog.author = request.user
             blog.save()
             return redirect(reverse_lazy('BlogView'))
@@ -95,8 +98,14 @@ class BlogCreateView(LoginRequiredMixin, View):
 
 class BlogView(View):
     def get(self, request):
+        """wyświetla cały blog"""
         blogs = Blog.objects.all()
         return render(request, 'blog.html', {'objects': blogs})
+
+def SeeBlog(request, id):
+    """wyświetla pojedyncze posty"""
+    post = Blog.objects.get(id=id)
+    return render(request, 'SeeBlog.html', {'post': post})
 
 
 class UpdateBlogView(LoginRequiredMixin, View):
@@ -119,45 +128,102 @@ class UpdateBlogView(LoginRequiredMixin, View):
             return redirect(reverse_lazy('BlogView'))
 
 
-def SeeBlog(request, id):
-    post = Blog.objects.get(id=id)
-    return render(request, 'SeeBlog.html', {'post': post})
-
-
 class DeleteBlogView(LoginRequiredMixin, DeleteView):
     model = Blog
     fields = '__all__'
     template_name = 'delete.html'
     success_url = (reverse_lazy('BlogView'))
 
+    # def post(self, request, *args, **kwargs):
+    #     blog = Blog.objects.get(pk=id)
+    #     if blog.author == request.user:
+    #         if request.POST['action'] == 'Cancel':
+    #             self.object = self.get_object()
+    #             success_url = self.get_success_url()
+    #             return redirect(success_url)
+    #         return self.delete(request, *args, **kwargs)
+    #     return render(request, 'error.html', {'error_notice': "You can't delete posts of other authors"})
+
+
+#   PLAN ####################################################################################################################
+
+class PlanCreateView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = PlanModelForm()
+        return render(request, 'form.html', {'form': form, 'button_name': 'Add plan'})
+
+    def post(self, request):
+        form = PlanModelForm(request.POST)
+        if form.is_valid():
+            plan = form.save(commit=False)  # nie zapisze bloga do bazy danych, tylko stworzy obiekt Blog
+            plan.author = request.user
+            form.save()
+            return redirect(reverse_lazy('PlanView'))
+
+
+class PlanView(LoginRequiredMixin, View):
+    def get(self, request):
+        plans = Plan.objects.filter(author=request.user)
+        if plans.count() == 0:
+            return render(request, 'error.html', {'error_notice': "You have no plans yet"})
+        return render(request, 'ListView.html', {'objects': plans})
+
+
+class UpdatePlanView(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        if id is None:
+            form = PlanModelForm()
+        else:
+            plan = Plan.objects.get(pk=id)
+            form = PlanModelForm(instance=plan)
+        return render(request, 'form.html', {'form': form, 'button_name': 'Update travel plan'})
+
+    def post(self, request, id=None):
+        if id is None:
+            form = PlanModelForm(request.POST)
+        else:
+            plan = Plan.objects.get(pk=id)
+            form = PlanModelForm(request.POST, instance=plan)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse_lazy('PlanView'))
+
+
+class DeletePlanView(LoginRequiredMixin, DeleteView):
+    model = Plan
+
+    fields = '__all__'
+    template_name = 'delete.html'
+    success_url = (reverse_lazy('PlanView'))
+
     def post(self, request, *args, **kwargs):
-        #if request.author_id == request.user_id:
         if request.POST['action'] == 'Cancel':
             self.object = self.get_object()
             success_url = self.get_success_url()
             return redirect(success_url)
         return self.delete(request, *args, **kwargs)
-       # return render(request, 'error.html', {'error_notice': "You can't delete posts of other authors"})
 
 
-#####################################################################################################################
+#   TRAVEL  ####################################################################################################################
 
 class TravelCreateView(LoginRequiredMixin, View):
     def get(self, request):
-        form = TravelModelForm()
+        form = TravelModelForm(logged_user=request.user)
         return render(request, 'form.html', {'form': form, 'button_name': 'Add travel'})
 
     def post(self, request):
-        form = TravelModelForm(request.POST)
+        form = TravelModelForm(request.POST, logged_user=request.user)
         if form.is_valid():
+            travel = form.save(commit=False)
+            travel.organizer = request.user
             form.save()
             return redirect(reverse_lazy('TravelView'))
-        return HttpResponse("Errror")
+        return render(request, 'form.html', {'form': form, 'button_name': 'Add travel'})
 
 
 class TravelView(LoginRequiredMixin, View):
     def get(self, request):
-        travels = Travel.objects.all()
+        travels = Travel.objects.filter(organizer=request.user)
         if travels.count() == 0:
             return render(request, 'error.html', {'error_notice': "You have no travels yet"})
         return render(request, 'ListView.html', {'objects': travels})
@@ -198,87 +264,32 @@ class DeleteTravelView(LoginRequiredMixin, DeleteView):
         return self.delete(request, *args, **kwargs)
 
 
-#####################################################################################################################
+#   JOURNAL ####################################################################################################################
 
-class PlanCreateView(View):
+class JournalCreateView(LoginRequiredMixin, View):
     def get(self, request):
-        form = PlanModelForm()
-        return render(request, 'form.html', {'form': form, 'button_name': 'Add plan'})
-
-    def post(self, request):
-        form = PlanModelForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse_lazy('PlanView'))
-
-
-class PlanView(View):
-    def get(self, request):
-        plans = Plan.objects.all()
-        if plans.count() == 0:
-            return render(request, 'error.html', {'error_notice': "You have no plans yet"})
-        return render(request, 'ListView.html', {'objects': plans})
-
-
-class UpdatePlanView(View):
-    def get(self, request, id=None):
-        if id is None:
-            form = PlanModelForm()
-        else:
-            plan = Plan.objects.get(pk=id)
-            form = PlanModelForm(instance=plan)
-        return render(request, 'form.html', {'form': form, 'button_name': 'Update travel plan'})
-
-    def post(self, request, id=None):
-        if id is None:
-            form = PlanModelForm(request.POST)
-        else:
-            plan = Plan.objects.get(pk=id)
-            form = PlanModelForm(request.POST, instance=plan)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse_lazy('PlanView'))
-
-
-class DeletePlanView(DeleteView):
-    model = Plan
-
-    fields = '__all__'
-    template_name = 'delete.html'
-    success_url = (reverse_lazy('PlanView'))
-
-    def post(self, request, *args, **kwargs):
-        if request.POST['action'] == 'Cancel':
-            self.object = self.get_object()
-            success_url = self.get_success_url()
-            return redirect(success_url)
-        return self.delete(request, *args, **kwargs)
-
-
-#####################################################################################################################
-
-class JournalCreateView(View):
-    def get(self, request):
-        form = JournalModelForm()
-        return render(request, 'form.html', {'form': form, 'button_name': 'Add travel'})
+        form = JournalModelForm(logged_user=request.user)
+        return render(request, 'form.html', {'form': form, 'button_name': 'Add journal'})
 
     def post(self, request):
         form = JournalModelForm(request.POST)
         if form.is_valid():
+            journal = form.save(commit=False)  # nie zapisze bloga do bazy danych, tylko stworzy obiekt Blog
+            journal.author = request.user
             form.save()
             return redirect(reverse_lazy('JournalView'))
-        return HttpResponse("Error while adding data. Try again")
+        return render(request, 'form.html', {'form': form, 'button_name': 'Add journal'})
 
 
-class JournalView(View):
+class JournalView(LoginRequiredMixin, View):
     def get(self, request):
-        journals = Travel_Journal.objects.all()
+        journals = Travel_Journal.objects.filter(author=request.user)
         if journals.count() == 0:
             return render(request, 'error.html', {'error_notice': "You have no journals yet"})
         return render(request, 'ListView.html', {'objects': journals})
 
 
-class UpdateJournalView(View):
+class UpdateJournalView(LoginRequiredMixin, View):
     def get(self, request, id=None):
         if id is None:
             form = JournalModelForm()
@@ -298,7 +309,7 @@ class UpdateJournalView(View):
             return redirect(reverse_lazy('JournalView'))
 
 
-class DeleteJournalView(DeleteView):
+class DeleteJournalView(LoginRequiredMixin, DeleteView):
     model = Travel_Journal
 
     fields = '__all__'

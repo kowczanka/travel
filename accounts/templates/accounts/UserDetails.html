@@ -1,20 +1,18 @@
-{%  extends 'accounts/baseSuperuser.html' %}
+{% extends 'accounts/baseSuperuser.html' %}
 
 {% block Superusercontent %}
-    {%  for obj in object %}
 
-<li>
-First name: {{ obj.first_name }}<br>
-    Last name: {{ obj.last_name }}<br>
+    <li>
+        First name: {{ objects.first_name }}<br>
+        Last name: {{ objects.last_name }}<br>
 
-    Username: {{ obj.username }}<br>
-email: {{ obj.email }}<br>
-groups: {{ obj.groups }}<br>
+        Username: {{ objects.username }}<br>
+        email: {{ objects.email }}<br>
 
-</li>
-        {%  empty %}
+        {% for group in objects.groups.all %}
+        groups: {{ group.name }}<br>
+    {% endfor %}
 
-        Lista jest pusta
+    </li>
 
-    {%  endfor %}
 {% endblock %}
